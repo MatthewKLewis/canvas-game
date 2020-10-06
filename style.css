@@ -1,0 +1,19 @@
+body {
+    background-color: #555;
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    position: absolute;
+    color: rgb(182, 209, 62);
+    font-family: monospace;
+    font-size: 16px;
+}
+
+canvas {
+    margin: 80px;
+    width: 1024px;
+    height: 768px;
+    background-color: rgb(182, 209, 62);
+}
