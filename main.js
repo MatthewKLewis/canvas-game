@@ -56,7 +56,6 @@ function draw(){
     //context.drawImage(player.image, player.x, player.y);
 
     //EFFECTS
-
 }
 
 //Start:
