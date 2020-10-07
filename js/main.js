@@ -1,5 +1,6 @@
 // DOM QUERIES
 let body = document.querySelector('body');
+let devStats = document.querySelector('#dev-stats')
 let canvas = document.querySelector('#canvas');
 let context = canvas.getContext('2d');
 
@@ -43,16 +44,35 @@ let backgroundImage = new Image();
 backgroundImage.src = "images/background.jpg";
 
 //FUNCTIONS
+function devStatUpdate() {
+
+    devStats.innerHTML = `Player Name: ${player.name} <br>Player HP: ${player.hp} <br><br>Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} 
+              <br>Player XVelocity: ${Math.round(player.velocityX)} <br>Player YVelocity: ${Math.round(player.velocityY)} <br>Player Standing: ${player.standing}`;
+}
+
 function controller(e) {
-    switch(e.code) {
-    case 'KeyW':  player.jump(); break;
-    case 'Space': player.jump(); break;
-    case 'KeyA':  player.move('left'); break;
-    case 'KeyD':  player.move('right'); break;
+    if (e.type == "keydown") {
+        switch (e.code) {
+            case 'ArrowUp': player.upPressed = true;        break;
+            case 'ArrowDown': player.downPressed = true;    break;
+            case 'ArrowLeft': player.leftPressed = true;    break;
+            case 'ArrowRight': player.rightPressed = true;  break;
+        }
+    }
+    else if (e.type == 'keyup') {
+        switch (e.code) {
+            case 'ArrowUp': player.upPressed = false;       break;
+            case 'ArrowDown': player.downPressed = false;   break;
+            case 'ArrowLeft': player.leftPressed = false;   break;
+            case 'ArrowRight': player.rightPressed = false; break;
+        }
     }
 }
 
 function gameLoop(){
+
+    //Update Dev Stats
+    devStatUpdate();
 
     //Model
     world.update();
@@ -69,7 +89,7 @@ class World {
     constructor(name, width, height) {
         this.name = name;
         this.gravity = 1;
-        this.friction = .1;
+        this.friction = .2;
         this.entities = [];
         this.width = 1024;
         this.height = 768;
@@ -88,6 +108,10 @@ class World {
     }
 
     applyVectorForces(entity) {
+
+        //run the move functions on all entities, updating their velocities based on input
+        entity.move();
+
         //apply gravity and update Y positions
         entity.velocityY -= this.gravity;
         entity.y -= entity.velocityY;
@@ -98,10 +122,55 @@ class World {
         if (entity.velocityX < 0) entity.velocityX += this.friction;
 
         //keep within border box
-        if (entity.y > 700) entity.y = 700;
+        if (entity.y > 700) {entity.y = 700; entity.velocityY = 0;}
         if (entity.y < 0) entity.y = 0;
         if (entity.x > 980) entity.x = 980;
         if (entity.x < 0) entity.x = 0;
+    }
+}
+
+class Player {
+    constructor(name, image, x, y, hp) {
+        this.name = name;
+        this.hp = hp;
+        this.image = image;
+
+        this.x = x;
+        this.y = y;
+
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.speed = 1;
+
+        this.jumpForce = 20;
+        this.standing = false;
+        
+        //input booleans
+        this.upPressed = false;
+        this.downPressed = false;
+        this.rightPressed = false;
+        this.leftPressed = false;
+    }
+
+    move(direction) {
+        if (this.rightPressed) this.velocityX += this.speed;
+        if (this.leftPressed) this.velocityX -= this.speed;
+        if (this.upPressed) this.velocityY = this.jumpForce;
+        if (this.downPressed) console.log('crouch?');
+    }
+
+    jump() {
+        this.velocityY = this.jumpForce;
+        this.jumping = true;
+    }
+}
+
+class Tile {
+    constructor(x,y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 }
 
@@ -138,40 +207,14 @@ class Renderer {
     }
 }
 
-class Player {
-    constructor(name, image, x, y, hp) {
-        this.name = name;
-        this.hp = hp;
-        this.image = image;
-
-        this.x = x;
-        this.y = y;
-
-        this.velocityX = 0;
-        this.velocityY = 0;
-        this.speed = 1;
-
-        this.jumpForce = 20;
-        this.jumping = false;
-    }
-
-    move(direction) {
-        if (direction == 'left') this.velocityX -= this.speed;
-        if (direction == 'right') this.velocityX += this.speed;
-    }
-
-    jump() {
-        this.velocityY = this.jumpForce;
-        this.jumping = true;
-    }
-}
-
 //START:  ------------------------------------------------------
 let world = new World('Earth');
 let renderer = new Renderer('Rendie', levelOne);
 let player = new Player('Matt', playerImage, 32, 32, 10);
 world.addEntity(player);
+
 document.addEventListener('keydown', controller);
+document.addEventListener('keyup', controller);
 
 //UPDATE: ------------------------------------------------------
 //gameLoop();
