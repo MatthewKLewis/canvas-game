@@ -3,6 +3,8 @@ let body = document.querySelector('body');
 let devStats = document.querySelector('#dev-stats')
 let canvas = document.querySelector('#canvas');
 let context = canvas.getContext('2d');
+context.font = '10px monospace';
+context.strokeStyle = 'rgba(102, 129, 22, .7)'
 
 //LEVEL ARRAY
 let levelOne = [01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01,
@@ -39,9 +41,6 @@ const theme = new Audio('audios/theme.mp3');
 //IMAGE ASSETS
 let playerImage = new Image();
 playerImage.src = "images/player.jpg";
-
-let backgroundImage = new Image();
-backgroundImage.src = "images/background.jpg";
 
 //FUNCTIONS
 function devStatUpdate() {
@@ -91,6 +90,7 @@ class World {
         this.gravity = 1;
         this.friction = .2;
         this.entities = [];
+        this.tiles = [];
         this.width = 1024;
         this.height = 768;
     }
@@ -107,10 +107,17 @@ class World {
         this.entities.push(entity);
     }
 
+    findEntityNeighbors() {
+
+    }
+
     applyVectorForces(entity) {
 
         //run the move functions on all entities, updating their velocities based on input
         entity.move();
+
+        //search for pairs of entities and blocking tiles
+
 
         //apply gravity and update Y positions
         entity.velocityY -= this.gravity;
@@ -122,10 +129,18 @@ class World {
         if (entity.velocityX < 0) entity.velocityX += this.friction;
 
         //keep within border box
-        if (entity.y > 700) {entity.y = 700; entity.velocityY = 0;}
+        if (entity.y > 704) {entity.y = 704; entity.velocityY = 0;}
         if (entity.y < 0) entity.y = 0;
-        if (entity.x > 980) entity.x = 980;
+        if (entity.x > 992) entity.x = 992;
         if (entity.x < 0) entity.x = 0;
+
+        //hard-coded platform
+        if (entity.x > 512 && entity.x < 740)
+            if (entity.y > 576) {entity.y = 576; entity.velocityY = 0;}
+    }
+
+    loadLevel(array) {
+        this.tiles = array;
     }
 }
 
@@ -181,15 +196,22 @@ class Renderer {
     }
 
     render() {
-        //render background
+        //render tiles
         let xBox = 0;
         let yBox = 0;
         let mapIndex = 0;
         for (let i = 0; i < 24; i++) {
             for (let j = 0; j < 32; j++) {
-                if (levelOne[mapIndex] % 2 == 0) context.fillStyle = 'rgba(182, 209, 62, .7)'
-                if (levelOne[mapIndex] % 2 == 1) context.fillStyle = 'rgba(162, 189, 42, .7)'
+                if (world.tiles[mapIndex] % 2 == 0) context.fillStyle = 'rgba(202, 229, 82, .7)'
+                if (world.tiles[mapIndex] % 2 == 1) context.fillStyle = 'rgba(162, 189, 42, .7)'
+
                 context.fillRect(xBox, yBox, unit, unit);
+
+                //Render Box Numbers
+                context.strokeRect(xBox, yBox, unit, unit);
+                context.fillStyle = 'rgba(102, 129, 22, .7)';
+                context.fillText(`${i+j}`,xBox + 4,yBox + 12);
+
                 xBox += 32;
                 mapIndex++;           
             }
@@ -212,6 +234,7 @@ let world = new World('Earth');
 let renderer = new Renderer('Rendie', levelOne);
 let player = new Player('Matt', playerImage, 32, 32, 10);
 world.addEntity(player);
+world.loadLevel(levelOne)
 
 document.addEventListener('keydown', controller);
 document.addEventListener('keyup', controller);
