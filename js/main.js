@@ -6,24 +6,24 @@ let context = canvas.getContext('2d');
 context.font = '10px monospace';
 context.strokeStyle = 'rgba(102, 129, 22, .7)'
 
-//LEVEL ARRAY
+//LEVEL ARRAY   01 is a free space, 02 is a floor tile, 03 is a one-way platform, 04 is ???
 let levelOne = [01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01,
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 03, 03, 03, 03, 03, 03, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 03, 03, 03, 03, 03, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 03, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 03, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
@@ -45,7 +45,7 @@ playerImage.src = "images/player.jpg";
 //FUNCTIONS
 function devStatUpdate() {
 
-    devStats.innerHTML = `Player Name: ${player.name} <br>Player HP: ${player.hp} <br><br>Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} 
+    devStats.innerHTML = `-=CYBERPUNK 1983=-<br> Player Name: ${player.name} <br><br>Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} 
               <br>Player XVelocity: ${Math.round(player.velocityX)} <br>Player YVelocity: ${Math.round(player.velocityY)} <br>Player Standing: ${player.canJump}
               <br>Player LastX: ${Math.round(player.lastX)} <br>Player Lasty: ${Math.round(player.lastY)}`;
 }
@@ -70,7 +70,6 @@ function controller(e) {
 }
 
 function gameLoop(){
-
     //Update Dev Stats
     devStatUpdate();
 
@@ -135,12 +134,13 @@ class World {
         entity.x += entity.velocityX;
         if (entity.velocityX > 0) entity.velocityX -= this.friction;
         if (entity.velocityX < 0) entity.velocityX += this.friction;
+        if (entity.velocityX > -.2 && entity.velocityX < .2) entity.velocityX = 0; //kill low float drift
 
         //keep within border box
         if (entity.y > 704) {entity.y = 704; entity.velocityY = 0; entity.canJump = true;} else {entity.canJump = false;}
-        if (entity.y < 0) entity.y = 0;
-        if (entity.x > 992) entity.x = 992;
-        if (entity.x < 0) entity.x = 0;
+        if (entity.y < 0) {entity.y = 0; entity.velocityY = 0;}
+        if (entity.x > 992) {entity.x = 992; entity.velocityX = 0;}
+        if (entity.x < 0) {entity.x = 0; entity.velocityX = 0;}
 
         //ALL NARROW SCOPE COLLISION BABY
         for (let i = 0; i < this.platforms.length; i++) {
@@ -152,9 +152,9 @@ class World {
 }
 
 class Player {
-    constructor(name, image, x, y, hp) {
+    constructor(name, image, x, y, color) {
         this.name = name;
-        this.hp = hp;
+        this.color = color;
         this.image = image;
 
         this.x = x;
@@ -167,7 +167,7 @@ class Player {
         this.velocityY = 0;
         this.speed = 1;
 
-        this.jumpForce = 30;
+        this.jumpForce = 18;
         this.canJump = false;
         
         //input booleans
@@ -181,7 +181,40 @@ class Player {
         if (this.rightPressed) this.velocityX += this.speed;
         if (this.leftPressed) this.velocityX -= this.speed;
         if (this.upPressed && this.canJump) this.velocityY = this.jumpForce;
-        if (this.downPressed) console.log('crouch?');
+    }
+
+    get directionOfMovementX() {return this.x - this.lastX}
+    get directionOfMovementY() {return this.y - this.lastY}
+}
+
+class Monster {
+    constructor(name, image, x, y, color) {
+        this.name = name;
+        this.color = color;
+        this.image = image;
+
+        this.x = x;
+        this.y = y;
+
+        this.lastX = 0;
+        this.lasyY = 0;
+
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.speed = 1;
+
+        this.jumpForce = 18;
+        this.canJump = false;
+
+        this.decisionIncrementer = 0;
+    }
+
+    move() {
+        this.decisionIncrementer++;
+        if(this.decisionIncrementer == 33) {
+            this.velocityY = 9;
+            this.decisionIncrementer = 0;
+        }
     }
 
     get directionOfMovementX() {return this.x - this.lastX}
@@ -233,30 +266,27 @@ class Renderer {
             yBox += 32;
         }
         //render entities
-        
-        //render player
-        context.fillStyle = 'black'
-        context.fillRect(player.x, player.y, unit, unit);
-
-        //render SFX
-
+        for (let i = 0; i < world.entities.length; i++) {
+            var tempEntity = world.entities[i];
+            context.fillStyle = tempEntity.color;
+            context.fillRect(tempEntity.x, tempEntity.y, unit, unit)            
+        }
     }
 }
 
 //START:  ------------------------------------------------------
 let world = new World('Earth');
 let renderer = new Renderer('Rendie', levelOne);
-let player = new Player('Matt', playerImage, 32, 32, 10);
+let player = new Player('Matt', playerImage, 32, 32, 'blue');
+let monster = new Monster('Goblin', playerImage, 400, 400, 'red');
+
+world.addEntity(monster);
 world.addEntity(player);
-world.loadLevel(levelOne)
+world.loadLevel(levelOne);
 
 document.addEventListener('keydown', controller);
 document.addEventListener('keyup', controller);
 
 //UPDATE: ------------------------------------------------------
-//gameLoop();
 theme.play();
-console.log(world.tiles)
-console.log(world.platforms)
-
-setInterval(gameLoop, 33); //one frame every 588 milliseconds, 1.7hz, 102 bpm, F Major 588!!!!!
+setInterval(gameLoop, 33);

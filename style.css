@@ -1,25 +1,18 @@
 body {
     background-color: #555;
     display: flex;
-    justify-content: center;
 }
 
-h1 {
-    position: absolute;
-    color: rgb(182, 209, 62);
-    font-family: monospace;
-    font-size: 16px;
-}
 
 p {
-    display: block;
     color: rgb(182, 209, 62);
     font-family: monospace;
     width: 300px;
+    font-size: 18px;
 }
 
 canvas {
-    margin: 80px;
+    margin: 60px;
     width: 1024px;
     height: 768px;
     background-color: rgb(182, 209, 62);
@@ -28,5 +21,4 @@ canvas {
 button {
     width: 40px;
     height: 40px;
-
 }
