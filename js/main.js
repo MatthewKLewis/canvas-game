@@ -6,27 +6,27 @@ let context = canvas.getContext('2d');
 context.font = '10px monospace';
 context.strokeStyle = 'rgba(102, 129, 22, .7)'
 
-//LEVEL ARRAY   01 is a free space, 02 is a floor tile, 03 is a one-way platform, 04 is ???
+//LEVEL ARRAY   01 is a free space, 02 is a one-way platform, 03 is ???
 let levelOne = [01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01,
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 02, 02, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 03, 03, 03, 03, 03, 03, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 02, 02, 02, 02, 02, 02, 02, 02, 02, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 02, 02, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 03, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 02, 02, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 02, 02, 02, 02, 02, 02, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 03, 03, 03, 03, 03, 03, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 02, 02, 02, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 02, 02, 02, 02, 02, 02, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
@@ -35,12 +35,15 @@ let levelOne = [01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
 //STANDARD UNITS: the canvas is 24 'units' tall and 32 'units' wide.
 const unit = 32; //pixels
 
-//AUDIO ASSETS
-const theme = new Audio('audios/theme.mp3');
-
 //IMAGE ASSETS
 let playerImage = new Image();
-playerImage.src = "images/player.jpg";
+playerImage.src = "images/player.png";
+
+let iceBlockImage = new Image()
+iceBlockImage.src = "images/iceBlock.png";
+
+let bkgImage = new Image()
+bkgImage.src = "images/background.png";
 
 //FUNCTIONS
 function devStatUpdate() {
@@ -110,12 +113,17 @@ class World {
 
     loadLevel(inputArray) { //for each item in levelOne, we create a tile and add it to the world.tiles array. (world.tiles[index].topBorder() would return the y height) )
         for (let i = 0; i < inputArray.length; i++) {
-            var tempTile = new Tile((i % 32),Math.floor(i / unit),unit,unit, inputArray[i]);
+
+            var tempImage = '';
+            if (inputArray[i] == 2) tempImage = iceBlockImage;
+            else tempImage = bkgImage;
+
+            var tempTile = new Tile((i % 32),Math.floor(i / unit),unit,unit, inputArray[i], tempImage);
             this.tiles.push(tempTile);
         }
         
         for (let i = 0; i < this.tiles.length; i++) {
-            if (this.tiles[i].type == 3) this.platforms.push(this.tiles[i]);            
+            if (this.tiles[i].type == 2) this.platforms.push(this.tiles[i]);            
         }
     }
 
@@ -152,9 +160,8 @@ class World {
 }
 
 class Player {
-    constructor(name, image, x, y, color) {
+    constructor(name, image, x, y,) {
         this.name = name;
-        this.color = color;
         this.image = image;
 
         this.x = x;
@@ -190,7 +197,6 @@ class Player {
 class Monster {
     constructor(name, image, x, y, color) {
         this.name = name;
-        this.color = color;
         this.image = image;
 
         this.x = x;
@@ -222,12 +228,13 @@ class Monster {
 }
 
 class Tile {
-    constructor(x,y, width, height, type) {
+    constructor(x,y, width, height, type, image) {
         this.x = (x-1)*unit;
         this.y = (y-1)*unit;
         this.width = width;
         this.height = height;
         this.type = type
+        this.image = image;
     }
 
     get topBorder() {return this.y}
@@ -248,15 +255,12 @@ class Renderer {
         let mapIndex = 0;
         for (let i = 0; i < 24; i++) {
             for (let j = 0; j < 32; j++) {
-                if (world.tiles[mapIndex].type  == 1) context.fillStyle = 'rgba(202, 229, 82, .7)'
-                if (world.tiles[mapIndex].type  == 2) context.fillStyle = 'rgba(162, 189, 42, .7)'
-                if (world.tiles[mapIndex].type  == 3) context.fillStyle = 'rgba(100, 100, 100, 1)'
-
-                context.fillRect(xBox, yBox, unit, unit);
+                //draw tiles
+                context.drawImage(world.tiles[mapIndex].image, xBox, yBox, unit, unit)
 
                 //Render Box Numbers
                 context.strokeRect(xBox, yBox, unit, unit);
-                context.fillStyle = 'rgba(102, 129, 22, .7)';
+                context.fillStyle = 'darkgray';
                 context.fillText(`${(i*unit) + j}`,xBox + 4,yBox + 12);
 
                 xBox += 32;
@@ -268,8 +272,7 @@ class Renderer {
         //render entities
         for (let i = 0; i < world.entities.length; i++) {
             var tempEntity = world.entities[i];
-            context.fillStyle = tempEntity.color;
-            context.fillRect(tempEntity.x, tempEntity.y, unit, unit)            
+            context.drawImage(tempEntity.image, tempEntity.x, tempEntity.y, unit, unit)            
         }
     }
 }
@@ -277,8 +280,8 @@ class Renderer {
 //START:  ------------------------------------------------------
 let world = new World('Earth');
 let renderer = new Renderer('Rendie', levelOne);
-let player = new Player('Matt', playerImage, 32, 32, 'blue');
-let monster = new Monster('Goblin', playerImage, 400, 400, 'red');
+let player = new Player('Matt', playerImage, 32, 32);
+let monster = new Monster('Goblin', playerImage, 400, 400);
 
 world.addEntity(monster);
 world.addEntity(player);
@@ -288,5 +291,4 @@ document.addEventListener('keydown', controller);
 document.addEventListener('keyup', controller);
 
 //UPDATE: ------------------------------------------------------
-theme.play();
 setInterval(gameLoop, 33);
