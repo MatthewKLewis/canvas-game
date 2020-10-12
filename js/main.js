@@ -9,8 +9,8 @@ context.strokeStyle = 'rgba(102, 129, 22, .7)'
 //LEVEL ARRAY   01 is a free space, 02 is a one-way platform, 03 is ???
 let levelOne = [01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01,
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
-                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 02, 02, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
+                01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 02, 02, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
                 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
@@ -41,6 +41,9 @@ let iceClinkSound = new Audio("audios/iceClink.mp3");
 //IMAGE ASSETS
 let playerImage = new Image();
 playerImage.src = "images/player.png";
+
+let monsterImage = new Image();
+monsterImage.src = "images/player.png";
 
 let iceBlockImage = new Image()
 iceBlockImage.src = "images/iceBlock.png";
@@ -163,6 +166,9 @@ class World {
                 }
             else {entity.canJump = false;}
         }
+
+        //Add a entity vs entity collision?
+        //forloop
     }
 }
 
@@ -291,7 +297,7 @@ class Renderer {
 let world = new World('Earth');
 let renderer = new Renderer('Rendie', levelOne);
 let player = new Player('Matt', playerImage, 32, 32);
-let monster = new Monster('Goblin', playerImage, 400, 400);
+let monster = new Monster('Goblin', monsterImage, 400, 400);
 
 world.addEntity(monster);
 world.addEntity(player);
