@@ -56,24 +56,26 @@ function devStatUpdate() {
 
     devStats.innerHTML = `-=CYBERPUNK 1983=-<br> Player Name: ${player.name} <br><br>Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} 
               <br>Player XVelocity: ${Math.round(player.velocityX)} <br>Player YVelocity: ${Math.round(player.velocityY)} <br>Player Standing: ${player.canJump}
-              <br>Player LastX: ${Math.round(player.lastX)} <br>Player Lasty: ${Math.round(player.lastY)}`;
+              <br>Player LastX: ${Math.round(player.lastX)} <br>Player Lasty: ${Math.round(player.lastY)} <br>Player Facing: ${player.facing}`;
 }
 
 function controller(e) {
     if (e.type == "keydown") {
         switch (e.code) {
             case 'ArrowUp': player.upPressed = true;        break;
-            case 'ArrowDown': player.downPressed = true;    break;
+            //case 'ArrowDown': player.downPressed = true;    break;
             case 'ArrowLeft': player.leftPressed = true;    break;
             case 'ArrowRight': player.rightPressed = true;  break;
+            case 'Space': player.spacePressed = true;  break;
         }
     }
     else if (e.type == 'keyup') {
         switch (e.code) {
             case 'ArrowUp': player.upPressed = false;       break;
-            case 'ArrowDown': player.downPressed = false;   break;
+            //case 'ArrowDown': player.downPressed = false;   break;
             case 'ArrowLeft': player.leftPressed = false;   break;
             case 'ArrowRight': player.rightPressed = false; break;
+            case 'Space': player.spacePressed = false;  break;
         }
     }
 }
@@ -97,7 +99,7 @@ class World {
     constructor(name, width, height) {
         this.name = name;
         this.gravity = 1;
-        this.friction = .1;
+        this.friction = .01;
         this.entities = [];
         this.tiles = [];        //every square in the gameboard
         this.platforms = [];    //every square with a type of 3, aka platforms!
@@ -108,7 +110,7 @@ class World {
     update() {
         //apply vector forces to all entities
         for (let i = 0; i < this.entities.length; i++) {
-            this.applyVectorForces(this.entities[i]);            
+            this.applyCollisions(this.entities[i]);            
         }
 
     }
@@ -133,10 +135,10 @@ class World {
         }
     }
 
-    applyVectorForces(entity) {
+    applyCollisions(entity) {
 
-        //run the move functions on all entities, updating their velocities based on input
-        entity.move();
+        //run the moveAndShoot functions on all entities, updating their velocities based on input
+        entity.moveAndShoot();
 
         //apply gravity and update Y positions
         entity.velocityY -= this.gravity;
@@ -167,8 +169,14 @@ class World {
             else {entity.canJump = false;}
         }
 
-        //Add a entity vs entity collision?
-        //forloop
+        //Add an entity vs entity collision
+        for (let i = 0; i < this.entities.length; i++) {
+            if (entity.x <= (this.entities[i].x + 32) && entity.x >= (this.entities[i].x - 32) 
+             && entity.y <= (this.entities[i].y + 32) && entity.y >= (this.entities[i].y - 32) 
+             && entity.name != this.entities[i].name) {
+                this.entities[i].velocityX = entity.velocityX;
+             }           
+        }
     }
 }
 
@@ -179,6 +187,7 @@ class Player {
 
         this.x = x;
         this.y = y;
+        this.facing = 'right'
 
         this.lastX = 0;
         this.lasyY = 0;
@@ -197,13 +206,27 @@ class Player {
         this.leftPressed = false;
     }
 
-    move(direction) {
-        if (this.rightPressed) this.velocityX += this.speed;
-        if (this.leftPressed) this.velocityX -= this.speed;
+    moveAndShoot(direction) {
+        if (this.rightPressed) {
+            this.velocityX += this.speed;
+            this.facing = 'right'
+        }
+        if (this.leftPressed) {
+            this.velocityX -= this.speed;
+            this.facing = 'left';
+        }
         if (this.upPressed && this.canJump) {
             this.velocityY = this.jumpForce;
             iceClinkSound.play();
         }
+        if (this.spacePressed) {
+            console.log('bang!');
+            this.fire();
+        }
+    }
+
+    fire() {
+        console.log('boom!')
     }
 
     get directionOfMovementX() {return this.x - this.lastX}
@@ -231,7 +254,7 @@ class Monster {
         this.decisionIncrementer = 0;
     }
 
-    move() {
+    moveAndShoot() {
         this.decisionIncrementer++;
         if(this.decisionIncrementer == 33) {
             this.velocityY = 9;
