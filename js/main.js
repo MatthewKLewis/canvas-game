@@ -35,6 +35,9 @@ let levelOne = [01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 
 //STANDARD UNITS: the canvas is 24 'units' tall and 32 'units' wide.
 const unit = 32; //pixels
 
+//AUDIO ASSETS
+let iceClinkSound = new Audio("audios/iceClink.mp3");
+
 //IMAGE ASSETS
 let playerImage = new Image();
 playerImage.src = "images/player.png";
@@ -91,7 +94,7 @@ class World {
     constructor(name, width, height) {
         this.name = name;
         this.gravity = 1;
-        this.friction = .2;
+        this.friction = .1;
         this.entities = [];
         this.tiles = [];        //every square in the gameboard
         this.platforms = [];    //every square with a type of 3, aka platforms!
@@ -147,13 +150,17 @@ class World {
         //keep within border box
         if (entity.y > 704) {entity.y = 704; entity.velocityY = 0; entity.canJump = true;} else {entity.canJump = false;}
         if (entity.y < 0) {entity.y = 0; entity.velocityY = 0;}
-        if (entity.x > 992) {entity.x = 992; entity.velocityX = 0;}
-        if (entity.x < 0) {entity.x = 0; entity.velocityX = 0;}
+        if (entity.x > 992) {entity.x = 992; entity.velocityX = (-entity.velocityX * .75);} //dampened wall bounce
+        if (entity.x < 0) {entity.x = 0; entity.velocityX = (-entity.velocityX * .75);}
 
         //ALL NARROW SCOPE COLLISION BABY
         for (let i = 0; i < this.platforms.length; i++) {
             if (entity.x > this.platforms[i].leftBorder && entity.x < this.platforms[i].rightBorder && entity.directionOfMovementY > 0) //if an entity is in the right x position AND moving downwards
-            if (entity.y > this.platforms[i].topBorder && entity.y < (this.platforms[i].topBorder+32)) {entity.y = this.platforms[i].topBorder; entity.velocityY = 0; entity.canJump = true;} //and if it moves to pass the platform, AND isn't fully under the platform
+                if (entity.y > this.platforms[i].topBorder && entity.y < (this.platforms[i].topBorder+32)) {
+                    entity.y = this.platforms[i].topBorder;
+                    entity.velocityY = 0;
+                    entity.canJump = true;
+                }
             else {entity.canJump = false;}
         }
     }
@@ -174,7 +181,7 @@ class Player {
         this.velocityY = 0;
         this.speed = 1;
 
-        this.jumpForce = 18;
+        this.jumpForce = 16;
         this.canJump = false;
         
         //input booleans
@@ -187,7 +194,10 @@ class Player {
     move(direction) {
         if (this.rightPressed) this.velocityX += this.speed;
         if (this.leftPressed) this.velocityX -= this.speed;
-        if (this.upPressed && this.canJump) this.velocityY = this.jumpForce;
+        if (this.upPressed && this.canJump) {
+            this.velocityY = this.jumpForce;
+            iceClinkSound.play();
+        }
     }
 
     get directionOfMovementX() {return this.x - this.lastX}
@@ -259,9 +269,9 @@ class Renderer {
                 context.drawImage(world.tiles[mapIndex].image, xBox, yBox, unit, unit)
 
                 //Render Box Numbers
-                context.strokeRect(xBox, yBox, unit, unit);
-                context.fillStyle = 'darkgray';
-                context.fillText(`${(i*unit) + j}`,xBox + 4,yBox + 12);
+                //context.strokeRect(xBox, yBox, unit, unit);
+                //context.fillStyle = 'darkgray';
+                //context.fillText(`${(i*unit) + j}`,xBox + 4,yBox + 12);
 
                 xBox += 32;
                 mapIndex++;           
@@ -291,4 +301,5 @@ document.addEventListener('keydown', controller);
 document.addEventListener('keyup', controller);
 
 //UPDATE: ------------------------------------------------------
+
 setInterval(gameLoop, 33);
