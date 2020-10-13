@@ -799,7 +799,7 @@ snowballImage.src = "images/snowball.png";
 //FUNCTIONS
 function devStatUpdate() {
 
-    devStats.innerHTML = `-=King of the Iceberg=-<br> Player Name: ${player.name} <br><br>Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} 
+    devStats.innerHTML = `Player Name: ${player.name} <br><br>Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} 
               <br>Player XVelocity: ${Math.round(player.velocityX)} <br>Player YVelocity: ${Math.round(player.velocityY)} <br>Player Standing: ${player.canJump}
               <br>Player LastX: ${Math.round(player.lastX)} <br>Player Lasty: ${Math.round(player.lastY)} <br>Player Facing: ${player.facing}`;
 }
@@ -974,12 +974,12 @@ class Player {
     fire() {
 
         if (!this.canShoot) console.log('click!')
-        if (this.facing = 'left' && this.canShoot) {
-            let tempProjectile = new Projectile("snowball", snowballImage, this.x + 32, this.y, 12);
+        else if (this.facing == 'left' && this.canShoot) {
+            let tempProjectile = new Projectile("snowball", snowballImage, this.x - 16, this.y, -12);
             world.addEntity(tempProjectile);
         }
-        if (this.facing = 'right' && this.canShoot) {
-            let tempProjectile = new Projectile("snowball", snowballImage, this.x - 32, this.y, 12);
+        else if (this.facing == 'right' && this.canShoot) {
+            let tempProjectile = new Projectile("snowball", snowballImage, this.x + 16, this.y, 12);
             world.addEntity(tempProjectile);
         }
     }
