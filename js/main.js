@@ -843,25 +843,45 @@ function gameLoop(){
 class World {
     constructor(name, width, height) {
         this.name = name;
+
         this.gravity = 1;
         this.friction = .01;
+
         this.entities = [];     //every monster and projectile, AND THE PLAYER!
         this.tiles = [];        //every square in the gameboard
         this.platforms = [];    //every square with a type of 2, aka ice tiles!
+
         this.width = 1024;
         this.height = 768;
+
+        this.spawnTicker = 0;
+        this.monsterCount = 0;
+        this.monstersToSpawn = ['1', '2', '3','4','5','6','7','8','9','10'];
     }
 
     update() {
+        //spawn monsters
+        this.spawnMonster();
+
         //apply vector forces to all entities
         for (let i = 0; i < this.entities.length; i++) {
             this.applyCollisions(this.entities[i]);            
         }
-
     }
 
     addEntity(entity) {
         this.entities.push(entity);
+    }
+
+    spawnMonster() {
+        this.spawnTicker++;
+        if (this.spawnTicker > 100) {
+            if (this.monsterCount < 10) {
+                console.log(this.monstersToSpawn[this.monsterCount]);
+                this.monsterCount++;
+            }
+            this.spawnTicker = 0;
+        }
     }
 
     loadLevel(inputArray) { //for each item in levelOne, we create a tile and add it to the world.tiles array. (world.tiles[index].topBorder() would return the y height) )
@@ -914,15 +934,16 @@ class World {
             else {entity.canJump = false;}
         }
 
-        /*Add an entity vs entity collision - ID'd as place for improvement
+        //Snowball vs Monster Collision!
         for (let i = 0; i < this.entities.length; i++) {
-            if (entity.x <= (this.entities[i].x + 32) && entity.x >= (this.entities[i].x - 32) 
-             && entity.y <= (this.entities[i].y + 32) && entity.y >= (this.entities[i].y - 32) 
-             && entity.name != this.entities[i].name) {
-                this.entities[i].velocityX = entity.velocityX;
+            if (entity.x <= (this.entities[i].x + 16) && entity.x >= (this.entities[i].x - 16) 
+             && entity.y <= (this.entities[i].y + 16) && entity.y >= (this.entities[i].y - 16) 
+             && entity.name == 'snowball' && this.entities[i].name != 'snowball'
+             && this.entities[i].name != 'player') {
+                console.log('impact!')
              }           
         }
-        */
+        
     }
 }
 
@@ -1077,9 +1098,9 @@ class Renderer {
                 context.drawImage(world.tiles[mapIndex].image, xBox, yBox, unit, unit)
 
                 //Render Box Numbers
-                //context.strokeRect(xBox, yBox, unit, unit);
-                //context.fillStyle = 'darkgray';
-                //context.fillText(`${(i*unit) + j}`,xBox + 4,yBox + 12);
+                context.strokeRect(xBox, yBox, unit, unit);
+                context.fillStyle = 'darkgray';
+                context.fillText(`${(i*unit) + j}`,xBox + 4,yBox + 12);
 
                 xBox += 32;
                 mapIndex++;           
@@ -1100,8 +1121,8 @@ class Renderer {
 //START:  ------------------------------------------------------
 let world = new World('Earth');
 let renderer = new Renderer('Rendie', levelOne);
-let player = new Player('Matt', playerImage, 32, 32);
-let monster = new Monster('Goblin', monsterImage, 400, 400);
+let player = new Player('player', playerImage, 32, 32);
+let monster = new Monster('goblin', monsterImage, 400, 400);
 
 world.addEntity(monster);
 world.addEntity(player);
