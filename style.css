@@ -1,14 +1,75 @@
+/* CSS for the Splash Page */
+
 body {
     background-color: #555;
     display: flex;
+    font-family: 'Courier New', Courier, monospace
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+#gamePlaceholder {
+    margin: 60px;
+    width: 1024px;
+    height: 768px;
+    background-color: cadetblue;
+    text-align: center;
+    font-size: 32px;
+    display: flex;
+    justify-content: center;
+    place-items: center;
+}
+
+#keyboardGrid {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto auto auto auto;
+
+}
+
+.key {
+    margin: 5px;
+    padding-top: 20px;
+    border-radius: 30px;
+    width: 160px;
+    height: 120px;
+    border: 5px solid black;
+    color: black;
+    background-color: lightgray;
+}
+
+.wide {
+    width: 300px;
+    height: 120px;
+}
+
+#up {grid-column: 3; grid-row: 3;} #left {grid-column: 2; grid-row: 4;} 
+#down {grid-column: 3; grid-row: 4;} #right {grid-column: 4; grid-row: 4;} 
+#ctrl {grid-column: 1; grid-row: 4; margin-right: 15px;} #spacer {grid-column: 1 / 5; grid-row: 2; height: 100px;}
+
+#playGame {
+    grid-column: 1 / 5; 
+    grid-row: 1;
+    margin: 5px;
+    padding-top: 30px;
+    height: 100px;
+    font-size: 50px;
+    background-color: red;
+    border: 5px solid black;
+    border-radius: 30px;
 }
 
 
+/* CSS for the Game */
+
 p {
     color: rgb(182, 209, 62);
-    font-family: monospace;
     width: 300px;
     font-size: 18px;
+    margin-top: 60px;
 }
 
 canvas {
@@ -16,9 +77,4 @@ canvas {
     width: 1024px;
     height: 768px;
     background-color: rgb(182, 209, 62);
-}
-
-button {
-    width: 40px;
-    height: 40px;
 }

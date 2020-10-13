@@ -10,7 +10,6 @@ context.strokeStyle = 'rgba(102, 129, 22, .7)'
 const unit = 32; //pixels
 
 //LEVEL
-
 let levelOne = [
     "01",
     "01",
@@ -788,15 +787,14 @@ let iceClinkSound = new Audio("audios/iceClink.mp3");
 //IMAGE ASSETS
 let playerImage = new Image();
 playerImage.src = "images/player.png";
-
 let monsterImage = new Image();
 monsterImage.src = "images/player.png";
-
-let iceBlockImage = new Image()
+let iceBlockImage = new Image();
 iceBlockImage.src = "images/iceBlock.png";
-
-let bkgImage = new Image()
+let bkgImage = new Image();
 bkgImage.src = "images/background.png";
+let snowballImage = new Image();
+snowballImage.src = "images/snowball.png";
 
 //FUNCTIONS
 function devStatUpdate() {
@@ -813,7 +811,7 @@ function controller(e) {
             //case 'ArrowDown': player.downPressed = true;    break;
             case 'ArrowLeft': player.leftPressed = true;    break;
             case 'ArrowRight': player.rightPressed = true;  break;
-            case 'Space': player.spacePressed = true;  break;
+            case 'ControlLeft': player.ctrlPressed = true;  break;
         }
     }
     else if (e.type == 'keyup') {
@@ -822,7 +820,7 @@ function controller(e) {
             //case 'ArrowDown': player.downPressed = false;   break;
             case 'ArrowLeft': player.leftPressed = false;   break;
             case 'ArrowRight': player.rightPressed = false; break;
-            case 'Space': player.spacePressed = false;  break;
+            case 'ControlLeft': player.ctrlPressed = false;  break;
         }
     }
 }
@@ -847,9 +845,9 @@ class World {
         this.name = name;
         this.gravity = 1;
         this.friction = .01;
-        this.entities = [];
+        this.entities = [];     //every monster and projectile, AND THE PLAYER!
         this.tiles = [];        //every square in the gameboard
-        this.platforms = [];    //every square with a type of 3, aka platforms!
+        this.platforms = [];    //every square with a type of 2, aka ice tiles!
         this.width = 1024;
         this.height = 768;
     }
@@ -884,8 +882,8 @@ class World {
 
     applyCollisions(entity) {
 
-        //run the moveAndShoot functions on all entities, updating their velocities based on input
-        entity.moveAndShoot();
+        //run the internalUpdate functions on all entities, updating their INTENDED velocities based on input
+        entity.internalUpdate();
 
         //apply gravity and update Y positions
         entity.velocityY -= this.gravity;
@@ -916,7 +914,7 @@ class World {
             else {entity.canJump = false;}
         }
 
-        //Add an entity vs entity collision
+        /*Add an entity vs entity collision - ID'd as place for improvement
         for (let i = 0; i < this.entities.length; i++) {
             if (entity.x <= (this.entities[i].x + 32) && entity.x >= (this.entities[i].x - 32) 
              && entity.y <= (this.entities[i].y + 32) && entity.y >= (this.entities[i].y - 32) 
@@ -924,6 +922,7 @@ class World {
                 this.entities[i].velocityX = entity.velocityX;
              }           
         }
+        */
     }
 }
 
@@ -945,6 +944,7 @@ class Player {
 
         this.jumpForce = 16;
         this.canJump = false;
+        this.canShoot = true;
         
         //input booleans
         this.upPressed = false;
@@ -953,7 +953,7 @@ class Player {
         this.leftPressed = false;
     }
 
-    moveAndShoot(direction) {
+    internalUpdate(direction) {
         if (this.rightPressed) {
             this.velocityX += this.speed;
             this.facing = 'right'
@@ -966,14 +966,22 @@ class Player {
             this.velocityY = this.jumpForce;
             iceClinkSound.play();
         }
-        if (this.spacePressed) {
-            console.log('bang!');
+        if (this.ctrlPressed) {
             this.fire();
         }
     }
 
     fire() {
-        console.log('boom!')
+
+        if (!this.canShoot) console.log('click!')
+        if (this.facing = 'left' && this.canShoot) {
+            let tempProjectile = new Projectile("snowball", snowballImage, this.x + 32, this.y, 12);
+            world.addEntity(tempProjectile);
+        }
+        if (this.facing = 'right' && this.canShoot) {
+            let tempProjectile = new Projectile("snowball", snowballImage, this.x - 32, this.y, 12);
+            world.addEntity(tempProjectile);
+        }
     }
 
     get directionOfMovementX() {return this.x - this.lastX}
@@ -1001,12 +1009,36 @@ class Monster {
         this.decisionIncrementer = 0;
     }
 
-    moveAndShoot() {
+    internalUpdate() {
         this.decisionIncrementer++;
         if(this.decisionIncrementer == 33) {
             this.velocityY = 9;
             this.decisionIncrementer = 0;
         }
+    }
+
+    get directionOfMovementX() {return this.x - this.lastX}
+    get directionOfMovementY() {return this.y - this.lastY}
+}
+
+class Projectile {
+    constructor(name, image, x, y, velocityX) {
+        this.name = name;
+        this.image = image;
+
+        this.x = x;
+        this.y = y;
+
+        this.lastX = 0;
+        this.lasyY = 0;
+
+        this.velocityX = velocityX;
+        this.velocityY = 0;
+        this.speed = 1;
+    }
+
+    internalUpdate() {
+        //
     }
 
     get directionOfMovementX() {return this.x - this.lastX}
@@ -1060,6 +1092,8 @@ class Renderer {
             var tempEntity = world.entities[i];
             context.drawImage(tempEntity.image, tempEntity.x, tempEntity.y, unit, unit)            
         }
+
+        //render projectiles
     }
 }
 
@@ -1077,5 +1111,4 @@ document.addEventListener('keydown', controller);
 document.addEventListener('keyup', controller);
 
 //UPDATE: ------------------------------------------------------
-
 setInterval(gameLoop, 33); //33 delivers roughly 30fps
