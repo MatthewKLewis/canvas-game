@@ -1,3 +1,13 @@
+//     __
+//    _|==|_  
+//     ('')___/
+// >--(`^^')
+//   (`^'^'`)
+//   `======'  
+//
+// to do: destroy monsters on snowball impact, damage from monsters, rate limit ammo, add kill counter and win condition, add left and right facing sprites. 
+
+
 // DOM QUERIES
 let body = document.querySelector('body');
 let devStats = document.querySelector('#dev-stats')
@@ -934,7 +944,7 @@ class World {
             else {entity.canJump = false;}
         }
 
-        //Snowball vs Monster Collision!
+        //Snowball vs Monster Collision! Reorg this to have if (snowball) first
         for (let i = 0; i < this.entities.length; i++) {
             if (entity.x <= (this.entities[i].x + 16) && entity.x >= (this.entities[i].x - 16) 
              && entity.y <= (this.entities[i].y + 16) && entity.y >= (this.entities[i].y - 16) 
@@ -943,6 +953,8 @@ class World {
                 console.log('impact!')
              }           
         }
+
+        //ADD! Monster vs Player Collision
         
     }
 }
@@ -989,6 +1001,14 @@ class Player {
         }
         if (this.ctrlPressed) {
             this.fire();
+        }
+
+        //Facing and Animation
+        if (this.facing == 'left') {
+            //change player image to L subsprite;
+        }
+        else if (this.facing == 'right') {
+            //change player image to R subsprite;
         }
     }
 
