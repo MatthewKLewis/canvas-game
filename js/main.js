@@ -5,7 +5,7 @@
 //   (`^'^'`)
 //   `======'  
 //
-// to do:  rate limit ammo, add kill counter and win condition, add left and right facing sprites. 
+// to do:  add win condition, and prevent damage being dealt by dead gremlins, add a gremlin dead sprite
 
 
 // DOM QUERIES
