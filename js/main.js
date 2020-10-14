@@ -798,7 +798,7 @@ let iceClinkSound = new Audio("audios/iceClink.mp3");
 let playerImage = new Image();
 playerImage.src = "images/player.png";
 let monsterImage = new Image();
-monsterImage.src = "images/player.png";
+monsterImage.src = "images/monster.png";
 let iceBlockImage = new Image();
 iceBlockImage.src = "images/iceBlock.png";
 let bkgImage = new Image();
@@ -809,8 +809,7 @@ snowballImage.src = "images/snowball.png";
 //FUNCTIONS
 function devStatUpdate() {
 
-    devStats.innerHTML = `Player Name: ${player.name} <br><br>Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} 
-              <br>Player XVelocity: ${Math.round(player.velocityX)} <br>Player YVelocity: ${Math.round(player.velocityY)} <br>Player Standing: ${player.canJump}
+    devStats.innerHTML = `Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} <br>Player XVelocity: ${Math.round(player.velocityX)} <br>Player YVelocity: ${Math.round(player.velocityY)} <br>Player Standing: ${player.canJump}
               <br>Player LastX: ${Math.round(player.lastX)} <br>Player Lasty: ${Math.round(player.lastY)} <br>Player Facing: ${player.facing} <br>Player Health: ${player.hp}`;
 }
 
@@ -870,9 +869,6 @@ class World {
     }
 
     update() {
-        //spawn monsters
-        this.spawnMonster();
-
         //apply vector forces to all entities
         for (let i = 0; i < this.entities.length; i++) {
             this.applyCollisions(this.entities[i]);            
@@ -881,17 +877,6 @@ class World {
 
     addEntity(entity) {
         this.entities.push(entity);
-    }
-
-    spawnMonster() {
-        this.spawnTicker++;
-        if (this.spawnTicker > 100) {
-            if (this.monsterCount < 10) {
-                console.log(this.monstersToSpawn[this.monsterCount]);
-                this.monsterCount++;
-            }
-            this.spawnTicker = 0;
-        }
     }
 
     despawnSnowball() {
@@ -983,6 +968,8 @@ class Player {
 
         this.x = x;
         this.y = y;
+        this.sx = 0;
+        this.sy = 0;
         this.facing = 'right'
 
         this.lastX = 0;
@@ -1026,10 +1013,12 @@ class Player {
 
         //Animation
         if (this.facing == 'left') {
-            //change player image to L subsprite;
+            this.sx = 32;
+            this.sy = 0;
         }
         else if (this.facing == 'right') {
-            //change player image to R subsprite;
+            this.sx = 0;
+            this.sy = 0;
         }
     }
 
@@ -1058,12 +1047,15 @@ class Monster {
 
         this.x = x;
         this.y = y;
+        this.sx = 0;
+        this.sy = 0;
 
         this.lastX = 0;
         this.lasyY = 0;
 
         this.velocityX = 0;
         this.velocityY = 0;
+        this.facing = 'left';
 
         this.speed = 1;
         this.jumpForce = 18;
@@ -1082,6 +1074,16 @@ class Monster {
                 this.decisionIncrementer = 0;
             }
         }
+
+        //Animation
+        if (this.facing == 'left') {
+            this.sx = 32;
+        }
+        else if (this.facing == 'right') {
+            this.sx = 0;
+        }
+        
+        if (!this.isAlive) this.sx = 64;
     }
 
     get directionOfMovementX() {return this.x - this.lastX}
@@ -1095,6 +1097,8 @@ class Projectile {
 
         this.x = x;
         this.y = y;
+        this.sx = 0;
+        this.sy = 0;
 
         this.lastX = 0;
         this.lasyY = 0;
@@ -1160,25 +1164,46 @@ class Renderer {
         //render entities (includes projectiles)
         for (let i = 0; i < world.entities.length; i++) {
             var tempEntity = world.entities[i];
-            context.drawImage(tempEntity.image, tempEntity.x, tempEntity.y, unit, unit)            
+            //context.drawImage(tempEntity.image, tempEntity.x, tempEntity.y, unit, unit)
+            context.drawImage(tempEntity.image, tempEntity.sx, tempEntity.sy, unit, unit, tempEntity.x, tempEntity.y, unit, unit)             
         }
 
         //render HUD
         context.fillStyle = 'white';
         context.font = '22px monospace';
-        context.fillText(`Player Score: 0`, 16, 32);
+        context.fillText(`Remaining: ${monsterTotal}`, 16, 32);
     }
 }
 
 //START:  ------------------------------------------------------
 let world = new World('Earth');
 let renderer = new Renderer('Rendie', levelOne);
-let player = new Player('player', playerImage, 32, 32);
-let monster = new Monster('monster', monsterImage, 400, 400);
 
-world.addEntity(monster);
-world.addEntity(player);
 world.loadLevel(levelOne);
+
+//Add Player
+let player = new Player('player', playerImage, 32, 700);
+world.addEntity(player);
+
+//Add 10 unique monsters (no for loop unfortunately)
+let monster1 = new Monster('monster', monsterImage, 400, 400);
+world.addEntity(monster1);
+let monster2 = new Monster('monster', monsterImage, 400, 200);
+world.addEntity(monster2);
+let monster3 = new Monster('monster', monsterImage, 580, 32);
+world.addEntity(monster3);
+let monster4 = new Monster('monster', monsterImage, 700, 32);
+world.addEntity(monster4);
+let monster5 = new Monster('monster', monsterImage, 1000, 300);
+world.addEntity(monster5);
+let monster6 = new Monster('monster', monsterImage, 1000, 600);
+world.addEntity(monster6);
+let monster7 = new Monster('monster', monsterImage, 32, 250);
+world.addEntity(monster7);
+let monster8 = new Monster('monster', monsterImage, 220, 32);
+world.addEntity(monster8);
+
+let monsterTotal = 8;
 
 document.addEventListener('keydown', controller);
 document.addEventListener('keyup', controller);
