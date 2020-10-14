@@ -5,7 +5,7 @@
 //   (`^'^'`)
 //   `======'  
 //
-// to do: destroy monsters on snowball impact, damage from monsters, rate limit ammo, add kill counter and win condition, add left and right facing sprites. 
+// to do:  rate limit ammo, add kill counter and win condition, add left and right facing sprites. 
 
 
 // DOM QUERIES
@@ -811,7 +811,7 @@ function devStatUpdate() {
 
     devStats.innerHTML = `Player Name: ${player.name} <br><br>Player X: ${Math.round(player.x)} <br>Player Y: ${Math.round(player.y)} 
               <br>Player XVelocity: ${Math.round(player.velocityX)} <br>Player YVelocity: ${Math.round(player.velocityY)} <br>Player Standing: ${player.canJump}
-              <br>Player LastX: ${Math.round(player.lastX)} <br>Player Lasty: ${Math.round(player.lastY)} <br>Player Facing: ${player.facing}`;
+              <br>Player LastX: ${Math.round(player.lastX)} <br>Player Lasty: ${Math.round(player.lastY)} <br>Player Facing: ${player.facing} <br>Player Health: ${player.hp}`;
 }
 
 function controller(e) {
@@ -894,6 +894,14 @@ class World {
         }
     }
 
+    despawnSnowball() {
+        //if the last element is a snowball, despawn it
+        if (this.entities[this.entities.length-1].name == 'snowball') {
+            console.log('despawn snowball')
+            this.entities.pop();
+        } 
+    }
+
     loadLevel(inputArray) { //for each item in levelOne, we create a tile and add it to the world.tiles array. (world.tiles[index].topBorder() would return the y height) )
         for (let i = 0; i < inputArray.length; i++) {
 
@@ -935,7 +943,7 @@ class World {
 
         //ALL NARROW SCOPE COLLISION BABY
         for (let i = 0; i < this.platforms.length; i++) {
-            if (entity.x > this.platforms[i].leftBorder && entity.x < this.platforms[i].rightBorder && entity.directionOfMovementY > 0) //if an entity is in the right x position AND moving downwards
+            if (entity.x > this.platforms[i].leftBorder && entity.x < this.platforms[i].rightBorder && entity.directionOfMovementY > 0)
                 if (entity.y > this.platforms[i].topBorder && entity.y < (this.platforms[i].topBorder+32)) {
                     entity.y = this.platforms[i].topBorder;
                     entity.velocityY = 0;
@@ -945,17 +953,26 @@ class World {
         }
 
         //Snowball vs Monster Collision! Reorg this to have if (snowball) first
-        for (let i = 0; i < this.entities.length; i++) {
-            if (entity.x <= (this.entities[i].x + 16) && entity.x >= (this.entities[i].x - 16) 
-             && entity.y <= (this.entities[i].y + 16) && entity.y >= (this.entities[i].y - 16) 
-             && entity.name == 'snowball' && this.entities[i].name != 'snowball'
-             && this.entities[i].name != 'player') {
-                console.log('impact!')
-             }           
+        if (entity.name == 'snowball') {
+            for (let i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].name == 'monster' && entity.x <= (this.entities[i].x + 16) && entity.x >= (this.entities[i].x - 16) 
+                && entity.y <= (this.entities[i].y + 16) && entity.y >= (this.entities[i].y - 16)) 
+                {
+                    this.entities[i].isAlive = false;
+                }           
+            }
         }
 
         //ADD! Monster vs Player Collision
-        
+        if (entity.name == 'player') {
+            for (let i = 0; i < this.entities.length; i++) {
+                if (this.entities[i].name == 'monster' && entity.x <= (this.entities[i].x + 16) && entity.x >= (this.entities[i].x - 16) 
+                && entity.y <= (this.entities[i].y + 16) && entity.y >= (this.entities[i].y - 16)) 
+                {
+                    entity.hp--;
+                }           
+            }
+        }
     }
 }
 
@@ -974,10 +991,12 @@ class Player {
         this.velocityX = 0;
         this.velocityY = 0;
         this.speed = 1;
-
         this.jumpForce = 16;
+
         this.canJump = false;
-        this.canShoot = true;
+        this.isAlive = true;
+        this.hp = 5;
+        this.fireCooldown = 0;
         
         //input booleans
         this.upPressed = false;
@@ -987,6 +1006,8 @@ class Player {
     }
 
     internalUpdate(direction) {
+        this.fireCooldown--;
+
         if (this.rightPressed) {
             this.velocityX += this.speed;
             this.facing = 'right'
@@ -1003,7 +1024,7 @@ class Player {
             this.fire();
         }
 
-        //Facing and Animation
+        //Animation
         if (this.facing == 'left') {
             //change player image to L subsprite;
         }
@@ -1014,14 +1035,15 @@ class Player {
 
     fire() {
 
-        if (!this.canShoot) console.log('click!')
-        else if (this.facing == 'left' && this.canShoot) {
-            let tempProjectile = new Projectile("snowball", snowballImage, this.x - 16, this.y, -12);
+        if (this.facing == 'left' && this.fireCooldown < 1) {
+            let tempProjectile = new Projectile("snowball", snowballImage, this.x - 16, this.y, -12, 5, 15);
             world.addEntity(tempProjectile);
+            this.fireCooldown = 15;
         }
-        else if (this.facing == 'right' && this.canShoot) {
-            let tempProjectile = new Projectile("snowball", snowballImage, this.x + 16, this.y, 12);
+        else if (this.facing == 'right' && this.fireCooldown < 1) {
+            let tempProjectile = new Projectile("snowball", snowballImage, this.x + 16, this.y, 12, 5, 15);
             world.addEntity(tempProjectile);
+            this.fireCooldown = 15;
         }
     }
 
@@ -1030,7 +1052,7 @@ class Player {
 }
 
 class Monster {
-    constructor(name, image, x, y, color) {
+    constructor(name, image, x, y) {
         this.name = name;
         this.image = image;
 
@@ -1042,19 +1064,23 @@ class Monster {
 
         this.velocityX = 0;
         this.velocityY = 0;
-        this.speed = 1;
 
+        this.speed = 1;
         this.jumpForce = 18;
+
         this.canJump = false;
+        this.isAlive = true;
 
         this.decisionIncrementer = 0;
     }
 
     internalUpdate() {
-        this.decisionIncrementer++;
-        if(this.decisionIncrementer == 33) {
-            this.velocityY = 9;
-            this.decisionIncrementer = 0;
+        if (this.isAlive) {
+            this.decisionIncrementer++;
+            if(this.decisionIncrementer == 33) {
+                this.velocityY = 9;
+                this.decisionIncrementer = 0;
+            }
         }
     }
 
@@ -1063,7 +1089,7 @@ class Monster {
 }
 
 class Projectile {
-    constructor(name, image, x, y, velocityX) {
+    constructor(name, image, x, y, velocityX, velocityY, life) {
         this.name = name;
         this.image = image;
 
@@ -1074,12 +1100,14 @@ class Projectile {
         this.lasyY = 0;
 
         this.velocityX = velocityX;
-        this.velocityY = 0;
-        this.speed = 1;
+        this.velocityY = velocityY;
+
+        this.life = life;
     }
 
     internalUpdate() {
-        //
+        this.life--;
+        if (this.life < 0) world.despawnSnowball();
     }
 
     get directionOfMovementX() {return this.x - this.lastX}
@@ -1118,9 +1146,10 @@ class Renderer {
                 context.drawImage(world.tiles[mapIndex].image, xBox, yBox, unit, unit)
 
                 //Render Box Numbers
-                context.strokeRect(xBox, yBox, unit, unit);
-                context.fillStyle = 'darkgray';
-                context.fillText(`${(i*unit) + j}`,xBox + 4,yBox + 12);
+                //context.strokeRect(xBox, yBox, unit, unit);
+                //context.fillStyle = 'darkgray';
+                context.font = '10px monospace';
+                //context.fillText(`${(i*unit) + j}`,xBox + 4,yBox + 12);
 
                 xBox += 32;
                 mapIndex++;           
@@ -1128,13 +1157,16 @@ class Renderer {
             xBox = 0;
             yBox += 32;
         }
-        //render entities
+        //render entities (includes projectiles)
         for (let i = 0; i < world.entities.length; i++) {
             var tempEntity = world.entities[i];
             context.drawImage(tempEntity.image, tempEntity.x, tempEntity.y, unit, unit)            
         }
 
-        //render projectiles
+        //render HUD
+        context.fillStyle = 'white';
+        context.font = '22px monospace';
+        context.fillText(`Player Score: 0`, 16, 32);
     }
 }
 
@@ -1142,7 +1174,7 @@ class Renderer {
 let world = new World('Earth');
 let renderer = new Renderer('Rendie', levelOne);
 let player = new Player('player', playerImage, 32, 32);
-let monster = new Monster('goblin', monsterImage, 400, 400);
+let monster = new Monster('monster', monsterImage, 400, 400);
 
 world.addEntity(monster);
 world.addEntity(player);
