@@ -792,6 +792,7 @@ let levelOne = [
 
 //AUDIO ASSETS
 let iceClinkSound = new Audio("audios/iceClink.mp3");
+let theme = new Audio("audios/theme.wav");
 
 //IMAGE ASSETS
 let playerImage = new Image();
@@ -1228,4 +1229,5 @@ document.addEventListener('keydown', controller);
 document.addEventListener('keyup', controller);
 
 //UPDATE: ------------------------------------------------------
+theme.play();
 setInterval(gameLoop, 33); //33 delivers roughly 30fps
