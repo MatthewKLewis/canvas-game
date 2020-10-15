@@ -7,7 +7,6 @@
 //
 // to do:  add win condition, and prevent damage being dealt by dead gremlins, add a gremlin dead sprite
 
-
 // DOM QUERIES
 let body = document.querySelector('body');
 let devStats = document.querySelector('#dev-stats')
@@ -863,15 +862,26 @@ class World {
         this.width = 1024;
         this.height = 768;
 
-        this.spawnTicker = 0;
-        this.monsterCount = 0;
-        this.monstersToSpawn = ['1', '2', '3','4','5','6','7','8','9','10'];
+        this.monsterTotal = 0;
     }
 
     update() {
+        this.checkRemainingMonsters()
         //apply vector forces to all entities
         for (let i = 0; i < this.entities.length; i++) {
             this.applyCollisions(this.entities[i]);            
+        }
+    }
+
+    checkRemainingMonsters() {
+        var total = 0;
+        for (let i = 0; i < this.entities.length; i++) {
+            if (this.entities[i].name == 'monster') {
+                if (this.entities[i].isAlive) {
+                    total++;
+                }
+            }
+            this.monsterTotal = total;
         }
     }
 
@@ -952,7 +962,7 @@ class World {
         if (entity.name == 'player') {
             for (let i = 0; i < this.entities.length; i++) {
                 if (this.entities[i].name == 'monster' && entity.x <= (this.entities[i].x + 16) && entity.x >= (this.entities[i].x - 16) 
-                && entity.y <= (this.entities[i].y + 16) && entity.y >= (this.entities[i].y - 16)) 
+                && entity.y <= (this.entities[i].y + 16) && entity.y >= (this.entities[i].y - 16) && this.entities[i].isAlive) 
                 {
                     entity.hp--;
                 }           
@@ -982,7 +992,7 @@ class Player {
 
         this.canJump = false;
         this.isAlive = true;
-        this.hp = 5;
+        this.hp = 15;
         this.fireCooldown = 0;
         
         //input booleans
@@ -1169,9 +1179,20 @@ class Renderer {
         }
 
         //render HUD
+        //Score
         context.fillStyle = 'white';
         context.font = '22px monospace';
-        context.fillText(`Remaining: ${monsterTotal}`, 16, 32);
+        context.fillText(`Remaining: ${world.monsterTotal}`, 16, 32);
+        if (world.monsterTotal == 0) {
+            context.font = '36px monospace';
+            context.fillText(`Y o u   W i n !`, 370, 400);
+        }
+        
+        
+        //Health
+        context.fillStyle = '#dc5432';
+        context.fillRect(765,16,player.hp * 16,16)
+
     }
 }
 
@@ -1185,7 +1206,7 @@ world.loadLevel(levelOne);
 let player = new Player('player', playerImage, 32, 700);
 world.addEntity(player);
 
-//Add 10 unique monsters (no for loop unfortunately)
+//Add 10 unique monsters (no 'for' loop unfortunately)
 let monster1 = new Monster('monster', monsterImage, 400, 400);
 world.addEntity(monster1);
 let monster2 = new Monster('monster', monsterImage, 400, 200);
@@ -1202,8 +1223,6 @@ let monster7 = new Monster('monster', monsterImage, 32, 250);
 world.addEntity(monster7);
 let monster8 = new Monster('monster', monsterImage, 220, 32);
 world.addEntity(monster8);
-
-let monsterTotal = 8;
 
 document.addEventListener('keydown', controller);
 document.addEventListener('keyup', controller);
