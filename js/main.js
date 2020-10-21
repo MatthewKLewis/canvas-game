@@ -5,7 +5,7 @@
 //   (`^'^'`)
 //   `======'  
 //
-//
+// King of the Iceberg
 
 // DOM QUERIES
 let body = document.querySelector('body');
@@ -127,7 +127,7 @@ class World {
     }
 
     update() {
-        this.checkRemainingMonsters()
+        this.checkRemainingMonsters();
         //apply vector forces to all entities
         for (let i = 0; i < this.entities.length; i++) {
             this.applyCollisions(this.entities[i]);            
@@ -196,7 +196,7 @@ class World {
         if (entity.x > 992) {entity.x = 992; entity.velocityX = (-entity.velocityX * .75);} //dampened wall bounce
         if (entity.x < 0) {entity.x = 0; entity.velocityX = (-entity.velocityX * .75);}
 
-        //ALL NARROW SCOPE COLLISION BABY
+        //ALL NARROW SCOPE COLLISION BABY!!!
         for (let i = 0; i < this.platforms.length; i++) {
             if (entity.x > this.platforms[i].leftBorder && entity.x < this.platforms[i].rightBorder && entity.directionOfMovementY > 0)
                 if (entity.y > this.platforms[i].topBorder && entity.y < (this.platforms[i].topBorder+32)) {
@@ -495,4 +495,4 @@ document.addEventListener('keyup', controller);
 
 //UPDATE: ------------------------------------------------------
 theme.play();
-setInterval(gameLoop, 33); //33 delivers roughly 30fps
+setInterval(gameLoop, 33); //33 delivers roughly 30fps. This is the only full-scoped function that is called!
