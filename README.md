@@ -5,6 +5,8 @@ I developed this game to demonstrate "narrow" collision mechanics between every 
 
 I challenged myself to code this without external libraries and in one page of vanilla javascript.
 
+![Figure 1-1](images/screen.png "Figure 1-1")
+
 Play it here!
 https://matthewklewis.github.io/canvas-game/
 
